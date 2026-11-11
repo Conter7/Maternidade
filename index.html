@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz do salário-maternidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#13202f; --navy2:#1c2c3f; --bg:#e8edf1; --card:#fff; --line:#cfd8e1;
+  --ink:#14202e; --muted:#5d6b7a; --green:#12895c; --green-d:#0f6a47; --green-bg:#e3f1ea;
+  --amber-bg:#fbf0dc; --amber:#8a5a0b; --red:#b3261e;
+  --head:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+button,input{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;padding:14px 16px 12px}
+.top-in,.wrap{max-width:560px;margin:0 auto}
+.top-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.top-title{font-family:var(--head);font-weight:700;font-size:16px}
+.top-step{font-size:12px;letter-spacing:.14em;font-weight:500;color:#9fb0c2;white-space:nowrap}
+.bars{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.bar{height:4px;border-radius:4px;background:#3a4a5d;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#fff;border-radius:4px;transition:width .35s ease}
+.wrap{padding:16px 16px 48px}
+.view{animation:in .28s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view{animation:none}.bar i{transition:none}}
+.pill{display:inline-block;background:var(--green-bg);color:var(--green-d);font-size:12px;font-weight:600;letter-spacing:.13em;padding:7px 12px;border-radius:999px;line-height:1.5}
+h1,h2,h3{font-family:var(--head);letter-spacing:-.02em;line-height:1.08;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,8vw,36px);font-weight:800;margin-top:14px}
+.intro p{color:var(--muted);margin:14px 0 20px}
+.intro p b{color:var(--ink);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 18px;box-shadow:0 2px 6px rgba(19,32,47,.06)}
+.card + .card,.card + .note,.note + .card{margin-top:16px}
+.eyebrow{font-size:12px;letter-spacing:.16em;font-weight:500;color:var(--muted)}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.back{background:none;border:0;padding:6px 0 6px 10px;color:var(--muted);cursor:pointer;font-size:15px}
+.back:hover{color:var(--ink)}
+h2{font-size:clamp(25px,7vw,30px);font-weight:700}
+.hint{color:var(--muted);margin:10px 0 16px}
+details.why{background:var(--amber-bg);border-radius:12px;margin-bottom:14px}
+details.why summary{list-style:none;cursor:pointer;padding:13px 14px;color:var(--amber);font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+details.why summary::-webkit-details-marker{display:none}
+details.why summary::after{content:"+";font-size:20px;font-weight:500;line-height:1}
+details.why[open] summary::after{content:"–"}
+details.why p{margin:0;padding:0 14px 14px;color:#6b4a12;font-size:15px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;cursor:pointer;font-weight:500;line-height:1.3;transition:border-color .15s,background .15s}
+.opt::before{content:"";flex:none;width:24px;height:24px;border-radius:50%;border:2px solid #c3cdd8;background:#fff;transition:.15s}
+.opt:hover{border-color:#9fb0c2}
+.opt[aria-checked="true"]{border-color:var(--green);background:#f3faf6}
+.opt[aria-checked="true"]::before{border-color:var(--green);background:radial-gradient(var(--green) 0 45%,#fff 50%)}
+:focus-visible{outline:3px solid #6fb1ff;outline-offset:2px}
+.note{margin-top:16px;border-radius:16px;padding:22px 18px;color:#fff;
+  background:radial-gradient(120% 90% at 85% 0%,#3c5068 0%,transparent 60%),radial-gradient(80% 80% at 10% 100%,#0c1520 0%,transparent 70%),linear-gradient(160deg,#243549,#131f2d)}
+.note .eyebrow{color:#8fd9b6;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px}
+.note h3{font-size:18px;font-weight:700;line-height:1.25;margin:8px 0 8px;letter-spacing:-.01em}
+.note p{margin:0;font-size:14px;color:#b9c5d2}
+.row{display:flex;justify-content:space-between;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px}
+.row small{display:block;color:var(--muted);font-size:14px;line-height:1.35}
+.row strong{display:block;font-weight:600;margin-top:4px;line-height:1.3}
+.link{background:none;border:0;padding:6px 0;color:var(--green-d);font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:15px}
+.fine{color:var(--muted);font-size:14px;margin:14px 2px}
+.btn{display:block;width:100%;text-align:center;text-decoration:none;border:0;border-radius:14px;padding:17px 16px;font-weight:600;font-size:17px;cursor:pointer;transition:filter .15s,transform .05s}
+.btn:active{transform:translateY(1px)}
+.btn-dark{background:var(--navy);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover,.btn-dark:hover{filter:brightness(1.08)}
+.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.res p{color:var(--muted);margin:10px 0 0}
+.res hr{border:0;border-top:1.5px dashed var(--line);margin:18px 0 14px}
+.amount{font-family:var(--head);font-weight:700;font-size:28px;color:var(--green-d);letter-spacing:-.01em}
+.res .sub{font-size:14px;margin-top:6px}
+.next{position:relative;border:2px solid var(--green);box-shadow:0 0 0 6px rgba(18,137,92,.12);margin-top:30px!important;padding-top:28px}
+.tag{position:absolute;top:-15px;left:16px;background:var(--green);color:#fff;font-size:12px;font-weight:600;letter-spacing:.13em;padding:5px 12px;border-radius:999px}
+.next h3{font-size:22px;font-weight:700}
+.next > p{color:var(--muted);margin:8px 0 16px}
+label{display:block;font-weight:600;font-size:15px;margin:14px 0 6px}
+input[type=text],input[type=tel]{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:15px 14px;font-size:17px;background:#fff}
+input::placeholder{color:#a9b4c0}
+input:focus{outline:0;border-color:var(--green);box-shadow:0 0 0 3px rgba(18,137,92,.18)}
+input.bad{border-color:var(--red)}
+.err{color:var(--red);font-size:14px;margin-top:6px;min-height:0}
+.next form .btn{margin-top:20px}
+.consent{font-size:14px;color:var(--ink);margin:12px 2px 0}
+.done{display:flex;gap:10px;margin:0 0 16px;color:var(--ink)}
+.done::before{content:"✓";color:var(--green);font-weight:700}
+.number{font-size:14px;color:var(--muted);text-align:center;margin:10px 0 0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="top-row"><div class="top-title" id="tTitle"></div><div class="top-step" id="tStep"></div></div>
+    <div class="bars" aria-hidden="true"><div class="bar"><i></i></div><div class="bar"><i></i></div><div class="bar"><i></i></div></div>
+  </div>
+</header>
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<script>
+/* ============ CONFIGURAÇÃO — troque aqui ============ */
+const CONFIG = {
+  whatsapp: "5551900000000",          // número de EXEMPLO: DDI + DDD + número, só dígitos
+  valor: "a partir de R$ 6.500",
+  dddExemplo: "51"
+};
+/* ==================================================== */
+
+const QUESTIONS = [
+  { sec:"Gravidez e trabalho", q:"Em que mês da gravidez você está?", hint:"Se não souber exato, vale o que está no cartão do pré-natal.",
+    why:"O pedido pode ser feito a partir de 28 dias antes do parto, e depois do nascimento ainda há prazo para pedir. Saber o momento ajuda a indicar o caminho certo.",
+    opts:["Estou grávida (do 1º ao 9º mês)","O bebê já nasceu","Não estou grávida (adoção ou guarda)"],
+    note:["Lei 8.213/91, art. 71","São 120 dias de benefício, pagos direto na sua conta pelo INSS.","Faltam poucas perguntas para você descobrir se pode contar com esse dinheiro."] },
+  { sec:"Gravidez e trabalho", q:"Como está o seu trabalho hoje?", hint:"Vale a sua situação neste momento.",
+    why:"Cada situação de trabalho tem uma regra diferente de quem paga o benefício e do que o INSS costuma exigir.",
+    opts:["Estou desempregada","Trabalho sem carteira, por conta ou bico","Estou com carteira assinada","Sou MEI ou pago o INSS por conta"],
+    note:["O erro mais comum","Achar que perdeu o direito sem nunca ter perguntado.","Na maioria dos casos ela não perdeu — e só descobre isso respondendo até o fim."] },
+  { sec:"Gravidez e trabalho", q:"Faz quanto tempo que você saiu do seu último emprego registrado (ou parou de pagar o INSS)?", hint:"Pode ser aproximado.",
+    why:"Quem para de contribuir continua protegida pelo INSS por um período. O tempo desde a última contribuição mostra se você ainda está dentro dele.",
+    opts:["Ainda estou trabalhando ou pagando","Faz menos de 1 ano","Entre 1 e 2 anos","Faz mais de 2 anos","Nunca trabalhei registrada nem paguei INSS"],
+    note:["Período de graça","Parar de pagar o INSS não corta a proteção na mesma hora.","Em geral ela continua por 12 meses depois da última contribuição, e em alguns casos por mais tempo."] },
+  { sec:"Situação do pedido", q:"Você já pediu ou já recebeu o salário-maternidade por esta gravidez?", hint:"Se não tiver certeza, marque a opção que mais se aproxima da sua situação.",
+    why:"Um pedido em análise, um pedido negado e um pedido nunca feito pedem passos diferentes.",
+    opts:["Nunca pedi e nunca recebi","Já recebi por um filho anterior, mas por este não","Já pedi por este bebê e está em análise","Já pedi por este bebê e foi negado","Já recebi por este bebê"],
+    note:["Uma vez por filho","O benefício é um por nascimento — mas cada gravidez conta a própria história.","Quem recebeu por um filho anterior tem direito outra vez: gravidez nova é direito novo."] },
+  { sec:"Situação do pedido", q:"Alguém já está cuidando desse caso para você?", hint:"Última pergunta.",
+    why:"Se você já tem advogado contratado, é com ele que o caso deve seguir.",
+    opts:["Não, ninguém está cuidando disso","Só conversei com alguém, mas não contratei","Tinha um advogado, mas não estou mais com ele","Sim, tenho advogado cuidando do caso"],
+    note:["Código de Ética da OAB, art. 14","Advogado não capta cliente que já tem patrono constituído.","Se você não contratou ninguém, o caminho está livre."] }
+];
+const POINTS = ["Carência de 10 contribuições não pode ser exigida","Valor pela média dos 12 últimos salários de contribuição","Conferência do CNIS antes do protocolo","INSS tem 30 dias para decidir o seu pedido"];
+
+const S = { step:0, ans:Array(5).fill(null), editing:false, lead:null }; // step 0-4 perguntas, 5 conferência, 6 resultado
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function header(){
+  const t = document.getElementById("tTitle"), st = document.getElementById("tStep");
+  if (S.step < 5){ t.textContent = QUESTIONS[S.step].sec; st.textContent = (S.step+1)+" DE 5"; }
+  else if (S.step === 5){ t.textContent = "Conferência"; st.textContent = "CONFERINDO"; }
+  else { t.textContent = "Resultado"; st.textContent = "PRONTO"; }
+  const p = Math.min(S.step,5)/5*3;
+  document.querySelectorAll(".bar i").forEach((b,i)=> b.style.width = Math.max(0,Math.min(1,p-i))*100+"%");
+}
+function go(step){ S.step = step; render(); window.scrollTo(0,0); }
+
+function render(){
+  header();
+  if (S.step < 5) return renderQ();
+  if (S.step === 5) return renderCheck();
+  renderResult();
+}
+
+function renderQ(){
+  const i = S.step, Q = QUESTIONS[i];
+  app.innerHTML = `<div class="view">
+    ${i===0 ? `<div class="intro"><span class="pill">5 PERGUNTAS · MENOS DE 1 MINUTO</span>
+      <h1>5 perguntas para saber se você tem direito ao salário-maternidade</h1>
+      <p>Feito para <b>mãe ou gestante que não recebe pela empresa</b>: desempregada, de bico, por conta, MEI, ou que parou de pagar o INSS. No fim você vê o resultado na hora — e, se houver direito, já pode falar com a advogada, sem esperar e sem juntar documento nenhum antes.</p></div>` : ""}
+    <section class="card">
+      <div class="card-head"><span class="eyebrow">PERGUNTA ${i+1} DE 5</span>${i>0||S.editing ? `<button class="back" id="back">← voltar</button>`:""}</div>
+      <h2 id="qt">${esc(Q.q)}</h2>
+      <p class="hint">${esc(Q.hint)}</p>
+      <details class="why"><summary>Por que perguntamos isso?</summary><p>${esc(Q.why)}</p></details>
+      <div class="opts" role="radiogroup" aria-labelledby="qt">
+        ${Q.opts.map((o,k)=>`<button class="opt" role="radio" aria-checked="${S.ans[i]===k}" data-k="${k}">${esc(o)}</button>`).join("")}
+      </div>
+    </section>
+    <aside class="note"><div class="eyebrow">${esc(Q.note[0]).toUpperCase()}</div><h3>${esc(Q.note[1])}</h3><p>${esc(Q.note[2])}</p></aside>
+  </div>`;
+  const b = document.getElementById("back");
+  if (b) b.onclick = () => { if (S.editing){ S.editing=false; go(5); } else go(i-1); };
+  app.querySelectorAll(".opt").forEach(el => el.onclick = () => {
+    S.ans[i] = +el.dataset.k;
+    app.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-checked", x===el));
+    setTimeout(() => { if (S.editing){ S.editing=false; go(5); } else go(i+1); }, 220);
+  });
+}
+
+function renderCheck(){
+  app.innerHTML = `<div class="view">
+    <section class="card"><span class="eyebrow">CONFERÊNCIA</span>
+      <h2 style="margin-top:10px">Confira suas respostas</h2>
+      <p class="hint" style="margin-bottom:0">O resultado é montado a partir disto. Toque em <b>alterar</b> se algo estiver errado — no fim você já sabe se tem direito, e pode falar com a advogada na mesma hora.</p>
+    </section>
+    ${QUESTIONS.map((Q,i)=>`<div class="row"><div><small>${esc(Q.q)}</small><strong>${esc(Q.opts[S.ans[i]])}</strong></div><button class="link" data-i="${i}" aria-label="Alterar resposta ${i+1}">alterar</button></div>`).join("")}
+    <p class="fine">Suas respostas ainda não saíram daqui. O resultado aparece na próxima tela.</p>
+    <button class="btn btn-dark" id="see">Ver o meu resultado</button>
+  </div>`;
+  app.querySelectorAll(".link").forEach(el => el.onclick = () => { S.editing = true; go(+el.dataset.i); });
+  document.getElementById("see").onclick = () => go(6);
+}
+
+function waLink(name){
+  const resp = QUESTIONS.map((Q,i)=> (i+1)+") "+Q.opts[S.ans[i]]).join("\n");
+  const msg = `Olá! Meu nome é ${name}.\n\nFiz a verificação do quiz do salário-maternidade. Resultado: Direito confirmado · contribuição ativa. Foram apontados ${POINTS.length} ponto(s): ${POINTS.join("; ")}.\n\nMinhas respostas:\n${resp}`;
+  return "https://wa.me/"+CONFIG.whatsapp+"?text="+encodeURIComponent(msg);
+}
+function fmtNumber(n){ return n.replace(/^(\d{2})(\d{2})(\d{5})(\d{4})$/,"+$1 $2 $3-$4"); }
+
+function renderResult(){
+  app.innerHTML = `<div class="view">
+    <section class="card res">
+      <span class="pill">DIREITO CONFIRMADO · CONTRIBUIÇÃO ATIVA · ${POINTS.length} PEDIDOS</span>
+      <h2 style="margin-top:14px">Você tem direito ao salário-maternidade.</h2>
+      <p>Você é segurada, mas o INSS ainda nega esses casos por carência e às vezes calcula o valor errado — os dois erros mais comuns. Só a advogada confere se o valor e a carência do seu caso saíram certos.</p>
+      <hr>
+      <div class="amount">${esc(CONFIG.valor)}</div>
+      <p class="sub">120 dias de benefício · quem ganhava mais recebe mais</p>
+    </section>
+    <section class="card next" id="next">
+      <span class="tag">PRÓXIMO PASSO</span>
+      <h3>Falar com a advogada agora</h3>
+      <p>Só nome e WhatsApp. A conversa inicial é com a advogada que cuida desses casos — é ela quem lê o seu histórico e diz o que fazer, em que ordem e em que prazo.</p>
+      <div id="slot"></div>
+    </section>
+    <p class="fine">Conteúdo informativo (Provimento nº 205/2021 do CFOAB). Não é oferta de resultado nem consulta jurídica.</p>
+    <button class="btn btn-ghost" id="redo">Refazer a verificação</button>
+  </div>`;
+  document.getElementById("redo").onclick = () => { S.ans.fill(null); S.lead=null; S.editing=false; go(0); };
+  S.lead ? renderDone() : renderForm();
+}
+
+function renderForm(){
+  const slot = document.getElementById("slot");
+  slot.innerHTML = `<form id="f" novalidate>
+      <label for="nm">Seu nome e sobrenome</label>
+      <input id="nm" type="text" autocomplete="name" placeholder="Nome e sobrenome" aria-describedby="e1">
+      <div class="err" id="e1" role="alert"></div>
+      <label for="ph">Seu WhatsApp</label>
+      <input id="ph" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(${CONFIG.dddExemplo}) 90000-0000" maxlength="15" aria-describedby="e2">
+      <div class="err" id="e2" role="alert"></div>
+      <button class="btn btn-green" type="submit">Falar com a advogada agora</button>
+    </form>
+    <p class="consent">Ao tocar no botão, você autoriza o escritório a guardar seu contato e falar com você sobre este caso.</p>`;
+  const nm = document.getElementById("nm"), ph = document.getElementById("ph"), e1 = document.getElementById("e1"), e2 = document.getElementById("e2");
+  ph.addEventListener("input", () => {
+    let d = ph.value.replace(/\D/g,"").replace(/^55(?=\d{11})/,"").slice(0,11), v = "";
+    if (d.length) v = "(" + d.slice(0,2);
+    if (d.length > 2) v += ") " + d.slice(2,7);
+    if (d.length > 7) v += "-" + d.slice(7);
+    ph.value = v; ph.classList.remove("bad"); e2.textContent = "";
+  });
+  nm.addEventListener("input", () => { nm.classList.remove("bad"); e1.textContent = ""; });
+  document.getElementById("f").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const name = nm.value.trim().replace(/\s+/g," "), d = ph.value.replace(/\D/g,"");
+    let ok = true;
+    if (name.split(" ").filter(p => p.length > 1).length < 2){ e1.textContent = "Digite nome e sobrenome."; nm.classList.add("bad"); ok = false; }
+    if (d.length !== 11 || +d.slice(0,2) < 11 || d[2] !== "9" || /^(\d)\1+$/.test(d.slice(2))){
+      e2.textContent = "Digite o WhatsApp com DDD, 11 dígitos. Ex.: ("+CONFIG.dddExemplo+") 90000-0000."; ph.classList.add("bad"); ok = false; }
+    if (!ok){ (nm.classList.contains("bad") ? nm : ph).focus(); return; }
+    S.lead = { name, phone:d };
+    renderDone();
+  });
+}
+
+function renderDone(){
+  const slot = document.getElementById("slot");
+  slot.innerHTML = `<p class="done"><span>Pronto, ${esc(S.lead.name)}. A mensagem já vai montada, só toque em enviar.</span></p>
+    <a class="btn btn-green" href="${waLink(S.lead.name)}" target="_blank" rel="noopener">Abrir o WhatsApp agora</a>
+    <p class="number">Ou chame direto: ${esc(fmtNumber(CONFIG.whatsapp))}</p>`;
+  slot.querySelector("a").focus();
+}
+
+render();
+</script>
+</body>
+</html>
