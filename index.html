@@ -106,7 +106,7 @@ input.bad{border-color:var(--red)}
 <script>
 /* ============ CONFIGURAÇÃO — troque aqui ============ */
 const CONFIG = {
-  whatsapp: "5551900000000",          // número de EXEMPLO: DDI + DDD + número, só dígitos
+  whatsapp: "555194972379",          // número de EXEMPLO: DDI + DDD + número, só dígitos
   valor: "a partir de R$ 6.500",
   dddExemplo: "51"
 };
@@ -202,7 +202,7 @@ function waLink(name){
   const msg = `Olá! Meu nome é ${name}.\n\nFiz a verificação do quiz do salário-maternidade. Resultado: Direito confirmado · contribuição ativa. Foram apontados ${POINTS.length} ponto(s): ${POINTS.join("; ")}.\n\nMinhas respostas:\n${resp}`;
   return "https://wa.me/"+CONFIG.whatsapp+"?text="+encodeURIComponent(msg);
 }
-function fmtNumber(n){ return n.replace(/^(\d{2})(\d{2})(\d{5})(\d{4})$/,"+$1 $2 $3-$4"); }
+function fmtNumber(n){ return n.replace(/^(\d{2})(\d{2})(\d{4,5})(\d{4})$/,"+$1 $2 $3-$4"); }
 
 function renderResult(){
   app.innerHTML = `<div class="view">
