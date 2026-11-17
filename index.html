@@ -6,7 +6,7 @@
 <title>Quiz do salário-maternidade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2114174759181167');fbq('track','PageView');</script><noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=2114174759181167&ev=PageView&noscript=1"/></noscript>
 <style>
 :root{
   --navy:#13202f; --navy2:#1c2c3f; --bg:#e8edf1; --card:#fff; --line:#cfd8e1;
@@ -110,7 +110,7 @@ const CONFIG = {
   valor: "a partir de R$ 6.500",
   dddExemplo: "51"
 };
-/* ==================================================== */
+/* ==================================================== */ const PIXEL_ID="2114174759181167";function px(e,d){try{window.fbq&&fbq("track",e,d||{})}catch(x){}}function pxCustom(e,d){try{window.fbq&&fbq("trackCustom",e,d||{})}catch(x){}}function pxLead(n,t){try{if(!window.fbq)return;const p=n.trim().split(/\s+/);fbq("init",PIXEL_ID,{fn:p[0].toLowerCase(),ln:p.slice(1).join(" ").toLowerCase(),ph:"55"+t,country:"br"});fbq("track","Lead",{content_name:"Quiz salario-maternidade",content_category:"INSS"})}catch(x){}}
 
 const QUESTIONS = [
   { sec:"Gravidez e trabalho", q:"Em que mês da gravidez você está?", hint:"Se não souber exato, vale o que está no cartão do pré-natal.",
@@ -177,7 +177,7 @@ function renderQ(){
   const b = document.getElementById("back");
   if (b) b.onclick = () => { if (S.editing){ S.editing=false; go(5); } else go(i-1); };
   app.querySelectorAll(".opt").forEach(el => el.onclick = () => {
-    S.ans[i] = +el.dataset.k;
+    S.ans[i] = +el.dataset.k; pxCustom("QuizEtapa",{etapa:i+1});
     app.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-checked", x===el));
     setTimeout(() => { if (S.editing){ S.editing=false; go(5); } else go(i+1); }, 220);
   });
@@ -204,7 +204,7 @@ function waLink(name){
 }
 function fmtNumber(n){ return n.replace(/^(\d{2})(\d{2})(\d{4,5})(\d{4})$/,"+$1 $2 $3-$4"); }
 
-function renderResult(){
+function renderResult(){ px("ViewContent",{content_name:"Resultado do quiz"});
   app.innerHTML = `<div class="view">
     <section class="card res">
       <span class="pill">DIREITO CONFIRMADO · CONTRIBUIÇÃO ATIVA · ${POINTS.length} PEDIDOS</span>
@@ -256,7 +256,7 @@ function renderForm(){
     if (d.length !== 11 || +d.slice(0,2) < 11 || d[2] !== "9" || /^(\d)\1+$/.test(d.slice(2))){
       e2.textContent = "Digite o WhatsApp com DDD, 11 dígitos. Ex.: ("+CONFIG.dddExemplo+") 90000-0000."; ph.classList.add("bad"); ok = false; }
     if (!ok){ (nm.classList.contains("bad") ? nm : ph).focus(); return; }
-    S.lead = { name, phone:d };
+    S.lead = { name, phone:d }; pxLead(name,d);
     renderDone();
   });
 }
@@ -266,7 +266,7 @@ function renderDone(){
   slot.innerHTML = `<p class="done"><span>Pronto, ${esc(S.lead.name)}. A mensagem já vai montada, só toque em enviar.</span></p>
     <a class="btn btn-green" href="${waLink(S.lead.name)}" target="_blank" rel="noopener">Abrir o WhatsApp agora</a>
     <p class="number">Ou chame direto: ${esc(fmtNumber(CONFIG.whatsapp))}</p>`;
-  slot.querySelector("a").focus();
+  const b2=slot.querySelector("a"); b2.addEventListener("click",()=>px("Contact",{content_name:"Abriu o WhatsApp"})); b2.focus();
 }
 
 render();
